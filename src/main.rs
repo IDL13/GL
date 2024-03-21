@@ -11,6 +11,30 @@ fn main() {
     // Инициализация и создание экземпляра Winsdl с размерами окна 800x800
     let mut winsdl = Winsdl::new(800, 800).unwrap();
 
+    unsafe {gl::Viewport(0, 0, 1000, 1000)}
+
+    let program = create_program().unwrap();
+    program.set();
+
+    let vertices: Vec<f32> = vec![
+        -0.5, -0.5,
+        0.0, -0.5,
+        0.5, 0.5,
+    ];
+
+    let indices: Vec<u32> = vec![
+        0, 1, 2,
+    ];
+
+    let vbo = VBO::gen();
+    vbo.set(&vertices);
+
+    let vao = VAO::gen();
+    vao.set();
+
+    let ibo = IBO::gen();
+    ibo.set(&indices);
+
     // Бесконечный цикл основного приложения
     'main_loop: loop {
         // Обработка событий из очереди событий SDL
@@ -28,7 +52,14 @@ fn main() {
             // Установка цвета очистки буфера цвета
             gl::ClearColor(1.0, 1.0, 1.0, 1.0);
             // Очистка буфера цвета
-            gl::Clear(gl::COLOR_BUFFER_BIT)
+            gl::Clear(gl::COLOR_BUFFER_BIT);
+
+            gl::DrawElements(
+                gl::TRIANGLES,
+                indices.len() as i32,
+                gl::UNSIGNED_INT,
+                0 as *const _
+            );
         }
 
         // Обмен буферов окна SDL
