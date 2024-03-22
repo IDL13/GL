@@ -1,5 +1,6 @@
 use std::{ffi::{CStr, CString}, ptr::{null, null_mut}};
-use gl::{types::{GLchar, GLenum, GLint, GLuint}, UseProgram};
+use gl::{types::{GLchar, GLenum, GLint, GLuint}, GetUniformLocation, UseProgram};
+use gl::types;
 
 pub struct Shader {
     id: GLuint,
@@ -82,6 +83,13 @@ impl Program {
     pub fn set(&self) {
         unsafe {
             UseProgram(self.id);
+            gl::Uniform2f(gl::GetUniformLocation(self.id, "resolution".as_ptr() as *mut GLchar), 800.0, 800.0)
+        }
+    }
+
+    pub fn time(&self) -> types::GLint {
+        unsafe {
+            gl::GetUniformLocation(self.id, "time".as_ptr() as *mut GLchar)
         }
     }
 }

@@ -2,6 +2,7 @@
 use sdl2::event::Event;
 use crate::winsdl::Winsdl;
 use crate::objects::*;
+use std::time::Instant;
 
 // Импорт модуля winsdl из текущего crate
 mod winsdl;
@@ -17,9 +18,13 @@ fn main() {
     program.set();
 
     let vertices: Vec<f32> = vec![
-        -0.5, -0.5,
-        0.0, -0.5,
-        0.5, 0.5,
+        -1.0, -1.0,
+        1.0, -1.0,
+        1.0, 1.0,
+
+        1.0, 1.0,
+        -1.0, 1.0,
+        -1.0, -1.0,
     ];
 
     let indices: Vec<u32> = vec![
@@ -49,17 +54,21 @@ fn main() {
         
         // Безопасный блок для вызова небезопасных функций OpenGL
         unsafe {
-            // Установка цвета очистки буфера цвета
-            gl::ClearColor(1.0, 1.0, 1.0, 1.0);
             // Очистка буфера цвета
             gl::Clear(gl::COLOR_BUFFER_BIT);
+            // Установка цвета очистки буфера цвета
+            gl::ClearColor(1.0, 0.0, 1.0, 1.0);
 
-            gl::DrawElements(
-                gl::TRIANGLES,
-                indices.len() as i32,
-                gl::UNSIGNED_INT,
-                0 as *const _
-            );
+            gl::Uniform1f(program.time(), Instant::now().elapsed().as_secs_f32());
+
+            gl::DrawArrays(gl::TRIANGLES, 0, 6)
+
+            // gl::DrawElements(
+            //     gl::TRIANGLES,
+            //     indices.len() as i32,
+            //     gl::UNSIGNED_INT,
+            //     0 as *const _
+            // );
         }
 
         // Обмен буферов окна SDL

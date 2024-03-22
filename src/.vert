@@ -1,7 +1,14 @@
 #version 330 core
 
-layout (location = 0) in vec2 Position;
+uniform vec2 resolution;
+uniform float time;
+vec2 fragCoord = gl_Position.xy;
+out vec4 theColor;
 
 void main() {
-    gl_Position = vec4(Position, 0.0, 1.0);
+    vec2 uv = fragCoord/resolution.xy;
+
+    vec3 col = 0.5 + 0.5 * cos(time+uv.xyx+vec3(0, 2, 4));
+    
+    theColor = vec4(col, 1.0);
 }
