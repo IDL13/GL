@@ -27,6 +27,7 @@ impl Winsdl {
         // Создание окна с поддержкой OpenGL
         let window = video_subsystem
             .window("Window", width as u32, height as u32)
+            .resizable()
             .opengl()
             .build()
             .unwrap();

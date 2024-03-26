@@ -4,6 +4,7 @@ use sdl2::event::Event;
 use crate::winsdl::Winsdl;
 use crate::objects::*;
 use std::time::Instant;
+use sdl2::event::{WindowEvent};
 
 // Импорт модуля winsdl из текущего crate
 mod winsdl;
@@ -11,9 +12,9 @@ mod objects;
 
 fn main() {
     // Инициализация и создание экземпляра Winsdl с размерами окна 800x800
-    let mut winsdl = Winsdl::new(800, 600).unwrap();
+    let mut winsdl = Winsdl::new(1000, 1000).unwrap();
 
-    unsafe {gl::Viewport(0, 0, 800, 600)}
+    unsafe {gl::Viewport(0, 0, 1000, 1000)}
 
     let program = create_program().unwrap();
     program.set();
@@ -45,7 +46,7 @@ fn main() {
     let u_time = Uniform::new(program.id(), "u_time").expect("u_time Uniform");
 
     unsafe {
-        gl::Uniform2f(u_resolution.id, 800., 600.);
+        gl::Uniform2f(u_resolution.id, 1000., 1000.);
         gl::Uniform1f(u_time.id, 0.0);
     }
 
@@ -58,6 +59,14 @@ fn main() {
             match event {
                 // Если событие - это закрытие окна, то выходим из цикла
                 Event::Quit {..} => break 'main_loop,
+                Event::Window { win_event, .. } => {
+                    if let WindowEvent::Resized(width, height) = win_event {
+                        unsafe {
+                            gl::Viewport(0, 0, width, height);
+                            gl::Uniform2f(u_resolution.id, width as f32, height as f32);
+                        }
+                    }
+                },
                 // Для остальных событий ничего не делаем
                 _ => {}
             }
@@ -68,7 +77,7 @@ fn main() {
             // Очистка буфера цвета
             gl::Clear(gl::COLOR_BUFFER_BIT);
             // Установка цвета очистки буфера цвета
-            gl::ClearColor(1.0, 0.0, 1.0, 1.0);
+            gl::ClearColor(0.0, 0.0, 0.0, 1.0);
 
             gl::Uniform1f(u_time.id, start.elapsed().as_secs_f32());
 

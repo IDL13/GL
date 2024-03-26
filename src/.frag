@@ -5,16 +5,8 @@ uniform vec2 u_resolution;
 vec2 fragCoord = gl_FragCoord.xy;
 out vec4 theColor;
 
-// void main() {
-//     vec2 uv = fragCoord/u_resolution.xy;
-
-//     vec3 col = 0.5 + 0.5 * cos(u_time + uv.xyx + vec3(0, 2, 4));
-
-//     thecolor = vec4(col, 1.0);
-// }
-
 vec3 palette(float d){
-	return mix(vec3(0.2,0.7,0.9),vec3(1.,0.,1.),d);
+	return mix(vec3(0.3451, 0.051, 0.8941),vec3(0.8902, 0.9529, 0.0157),d);
 }
 
 vec2 rotate(vec2 p,float a){
@@ -25,13 +17,14 @@ vec2 rotate(vec2 p,float a){
 
 float map(vec3 p){
     for( int i = 0; i<8; ++i){
-        float t = u_time*0.2;
+        float t = u_time*0.1;
         p.xz =rotate(p.xz,t);
         p.xy =rotate(p.xy,t*1.89);
+        p.yz = rotate(p.yz, t*1.89);
         p.xz = abs(p.xz);
         p.xz-=.5;
 	}
-	return dot(sign(p),p)/5.;
+	return dot(sign(p),p)/4.;
 }
 
 vec4 rm (vec3 ro, vec3 rd){
@@ -56,13 +49,13 @@ vec4 rm (vec3 ro, vec3 rd){
 void main()
 {
     vec2 uv = (fragCoord-(u_resolution.xy/2.))/u_resolution.x;
-	vec3 ro = vec3(0.,0.,-50.);
-    ro.xz = rotate(ro.xz,u_time);
+	vec3 ro = vec3(0.,0.,-80.);
+    ro.xz = rotate(ro.xz,u_time*2);
     vec3 cf = normalize(-ro);
-    vec3 cs = normalize(cross(cf,vec3(0.,1.,0.)));
+    vec3 cs = normalize(cross(cf,vec3(0.0196, 0.6392, 1.0)));
     vec3 cu = normalize(cross(cf,cs));
     
-    vec3 uuv = ro+cf*3. + uv.x*cs + uv.y*cu;
+    vec3 uuv = ro+cf*5. + uv.x*cs + uv.y*cu;
     
     vec3 rd = normalize(uuv-ro);
     
