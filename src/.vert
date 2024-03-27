@@ -8,11 +8,9 @@ void main()
 {
     vec2 uv = Position;
 
-    if (u_resolution.x > u_resolution.y) {
-        uv.x *= u_resolution.y / u_resolution.x;
-    } else {
-        uv.y *= u_resolution.x / u_resolution.y;
-    }
+    uv.x *= u_resolution.y / u_resolution.x;
+    uv.x *= u_resolution.x / u_resolution.y;
+
 
     gl_Position = vec4(uv, 0.0, 1.0);
 }

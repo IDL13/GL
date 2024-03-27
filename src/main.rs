@@ -12,9 +12,9 @@ mod objects;
 
 fn main() {
     // Инициализация и создание экземпляра Winsdl с размерами окна 800x800
-    let mut winsdl = Winsdl::new(1000, 1000).unwrap();
+    let mut winsdl = Winsdl::new(800, 800).unwrap();
 
-    unsafe {gl::Viewport(0, 0, 1000, 1000)}
+    unsafe {gl::Viewport(0, 0, 800, 800)}
 
     let program = create_program().unwrap();
     program.set();
